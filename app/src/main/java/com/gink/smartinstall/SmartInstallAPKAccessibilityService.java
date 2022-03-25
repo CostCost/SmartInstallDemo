@@ -2,7 +2,10 @@ package com.gink.smartinstall;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
@@ -22,39 +25,67 @@ public class SmartInstallAPKAccessibilityService extends AccessibilityService {
     private Map<Integer, Boolean> handleMap = new HashMap<>();
 
     @Override
+    protected void onServiceConnected() {
+        super.onServiceConnected();
+        Log.d(TAG, "onServiceConnected: ");
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
+        Log.d(TAG, "onAccessibilityEvent: " + event);
         AccessibilityNodeInfo nodeInfo = event.getSource();
         if (nodeInfo != null) {
             int eventType = event.getEventType();
             if (eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED ||
                     eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-                if (handleMap.get(event.getWindowId()) == null) {
-                    boolean handled = iterateNodesAndHandle(nodeInfo);
-                    if (handled) {
-                        handleMap.put(event.getWindowId(), true);
-                    }
-                }
-            }
+                // todo this strategy is too violence
+                boolean handled = iterateNodesAndHandle(nodeInfo);
 
+//                if (handleMap.get(event.getWindowId()) == null) {
+//                    if (handled) {
+//                        handleMap.put(event.getWindowId(), true);
+//                    }
+//                }
+//                if ((event.getContentChangeTypes() & AccessibilityEvent.CONTENT_CHANGE_TYPE_TEXT) != 0) {
+//                    String nodeCotent = nodeInfo.getText().toString();
+//                    Log.d(TAG, "=== onAccessibilityEvent: " + nodeCotent + "  " + installNode);
+//                    if ("android.widget.TextView".equals(nodeInfo.getClassName()) && "未发现风险".equals(nodeCotent)) {
+//                        if (installNode != null) {
+//                            installNode.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+//                        }
+//                    }
+//                }
+            }
         }
     }
 
     @Override
     public void onInterrupt() {
-
+        Log.d(TAG, "onInterrupt: ");
     }
 
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.d(TAG, "onUnbind: ");
+        return super.onUnbind(intent);
+    }
+
+    private AccessibilityNodeInfo installNode;
+
     //遍历节点，模拟点击安装按钮
-    private boolean iterateNodesAndHandle(AccessibilityNodeInfo nodeInfo) {
+    private boolean iterateNodesAndHandle(final AccessibilityNodeInfo nodeInfo) {
         if (nodeInfo != null) {
             int childCount = nodeInfo.getChildCount();
             if ("android.widget.Button".equals(nodeInfo.getClassName())) {
                 String nodeCotent = nodeInfo.getText().toString();
                 Log.d(TAG, "content is: " + nodeCotent);
-                if ("安装".equals(nodeCotent)
-//                        || "完成".equals(nodeCotent)
+                if ("继续安装".equals(nodeCotent)
+                        || "完成".equals(nodeCotent)
                         || "确定".equals(nodeCotent)
                         || "打开".equals(nodeCotent)) {
+                    Log.d(TAG, "iterateNodesAndHandle: clicked!");
+                    installNode = nodeInfo;
                     nodeInfo.performAction(AccessibilityNodeInfo.ACTION_CLICK);
                     return true;
                 }
