@@ -4,10 +4,10 @@
 
 需要 root，不可行
 
-https://blog.csdn.net/guolin_blog/article/details/47803149
-https://blog.csdn.net/GinkWang/article/details/79683264
-https://developer.android.com/guide/topics/ui/accessibility/service?hl=zh-cn#register
-https://blog.csdn.net/fuchaosz/article/details/51852442
+- https://blog.csdn.net/guolin_blog/article/details/47803149
+- https://blog.csdn.net/GinkWang/article/details/79683264
+- https://developer.android.com/guide/topics/ui/accessibility/service?hl=zh-cn#register
+- https://blog.csdn.net/fuchaosz/article/details/51852442
 
 工具：插桩（AOP）、HOOK、获取系统文件信息
 
