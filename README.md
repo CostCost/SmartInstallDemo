@@ -1,3 +1,18 @@
+# 参考资料
+
+我研究了下，有两个方案，一个是 su 切换到 root 之后安装，基本不可行；一个是使用无障碍服务，注册无障碍服务监听页面变化事件，模拟点击继续操作，缺点是：注册无障碍服务的时候需要根据不同手机安装器进行兼容
+
+需要 root，不可行
+
+https://blog.csdn.net/guolin_blog/article/details/47803149
+https://blog.csdn.net/GinkWang/article/details/79683264
+https://developer.android.com/guide/topics/ui/accessibility/service?hl=zh-cn#register
+https://blog.csdn.net/fuchaosz/article/details/51852442
+
+工具：插桩（AOP）、HOOK、获取系统文件信息
+
+
+
 ## Android APK 省心安装 —— 眼睁睁地看着它完成一切
 
 > 项目的一个新需求。因为我们现在做的是一个服务于公共的产品，实施人员也不一定及时地去维护。所以为了方便，我们想要 APK 更新时静默更新，就是不需要人去主动触发或者同意，就能够实现软件更新。上网查资料，最终实现方法如下：
